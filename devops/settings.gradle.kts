@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "devops"
 
-include("detect-settings")
+include("detekt-settings")

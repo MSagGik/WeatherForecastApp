@@ -1,7 +1,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
-private val detektConfigPath = "devops/detect-settings/configurations/detekt-tests.yml"
+private val detektConfigPath = "devops/detekt-settings/configurations/detekt-tests.yml"
 
 // ✅ Главная задача для всех модулей
 val detektAll by tasks.register<Detekt>("detektAll") {
@@ -11,7 +11,7 @@ val detektAll by tasks.register<Detekt>("detektAll") {
     jvmTarget = JavaVersion.VERSION_17.toString()
     buildUponDefaultConfig = true
 
-    setSource(files(rootProject.projectDir))
+    setSource(files(projectDir))
     include("**/*.kt", "**/*.kts")
     exclude("**/resources/**", "**/build/**")
 
@@ -19,9 +19,10 @@ val detektAll by tasks.register<Detekt>("detektAll") {
         xml.required.set(true)
         html.required.set(true)
         txt.required.set(false)
+        sarif.required.set(false)
     }
 
-    config.setFrom(files(rootProject.projectDir.resolve(detektConfigPath)))
+    config.setFrom(files(project.rootDir.resolve(detektConfigPath)))
 }
 
 // ✅ Форматирование
@@ -30,13 +31,13 @@ val detektFormat by tasks.register<Detekt>("detektFormat") {
     parallel = true
     autoCorrect = true
     jvmTarget = JavaVersion.VERSION_17.toString()
-    config.setFrom(files(rootProject.projectDir.resolve(detektConfigPath)))
+    config.setFrom(files(project.rootDir.resolve(detektConfigPath)))
 }
 
 // ✅ Создание baseline
 val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektProjectBaseline") {
     description = "Regenerates the Detekt baseline file."
-    setSource(files(rootProject.projectDir))
+    setSource(files(projectDir))
     include("**/*.kt", "**/*.kts")
     exclude("**/resources/**", "**/build/**")
 
@@ -44,5 +45,5 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
     ignoreFailures.set(true)
     parallel.set(true)
     jvmTarget = JavaVersion.VERSION_17.toString()
-    config.setFrom(files(rootProject.projectDir.resolve(detektConfigPath)))
+    config.setFrom(files(project.rootDir.resolve(detektConfigPath)))
 }
