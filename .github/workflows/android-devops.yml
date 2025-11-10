@@ -1,0 +1,117 @@
+name: Android DevOps
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  commonGradleFlags: --parallel --stacktrace --build-cache --no-daemon --warning-mode=summary
+  detektReportPath: ${{ github.workspace }}/build/reports/detekt/detekt.xml
+  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=added -tee -fail-on-error=true
+
+jobs:
+  tests:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clone repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Cleanup GitHub Actions bot logs
+      - name: Cleanup GitHub Actions bot logs
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          bash ./devops-app/scripts/cleanup-gh-bot-logs.sh \
+            "${{ github.repository_owner }}" \
+            "${{ github.event.repository.name }}" \
+            "${{ github.event.pull_request.number }}" \
+            "github-actions[bot]" \
+            "${{ secrets.GITHUB_TOKEN }}"
+
+      # 3. Install Reviewdog
+      - name: Set up Reviewdog
+        uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      # 4. Install JDK
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+
+      # 5. Make gradlew executable
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 6. Run detekt
+      - name: Run detekt
+        run: ./gradlew detektAll $commonGradleFlags
+
+      # 7. Submitting a Detekt report to Reviewdog (as a comment in PR)
+      - name: Run Reviewdog for Detekt as Github Review
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog $reviewdogSetup -reporter=github-pr-review <$detektReportPath
+
+      # 8. Submitting a Detect report as a GitHub Check
+      - name: Run Reviewdog for Detekt as Github CHECK
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog $reviewdogSetup -reporter=github-pr-check <$detektReportPath
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clone repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install JDK
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+
+      # 3. Make gradlew executable
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. Add WEATHER_API_KEY в weather.properties
+      - name: Create weather.properties
+        run: echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" > weather.properties
+
+      # 5. Cache to speed up builds
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # 6.Build APK
+      - name: Build Debug APK
+        run: ./gradlew :app:assembleDebug $commonGradleFlags
+
+      # 7. Downloading APK as an artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/*.apk

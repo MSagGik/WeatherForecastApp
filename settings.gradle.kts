@@ -20,4 +20,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "WeatherForecastApp"
+
+includeBuild("devops")
 include(":app")
