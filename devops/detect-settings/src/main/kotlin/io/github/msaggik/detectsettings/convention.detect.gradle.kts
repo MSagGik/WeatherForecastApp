@@ -11,7 +11,7 @@ val detektAll by tasks.register<Detekt>("detektAll") {
     jvmTarget = JavaVersion.VERSION_17.toString()
     buildUponDefaultConfig = true
 
-    setSource(files(project.rootDir))
+    setSource(files(rootProject.projectDir))
     include("**/*.kt", "**/*.kts")
     exclude("**/resources/**", "**/build/**")
 
@@ -21,7 +21,7 @@ val detektAll by tasks.register<Detekt>("detektAll") {
         txt.required.set(false)
     }
 
-    config.setFrom(files(project.rootDir.resolve(detektConfigPath)))
+    config.setFrom(files(rootProject.projectDir.resolve(detektConfigPath)))
 }
 
 // ✅ Форматирование
@@ -30,13 +30,13 @@ val detektFormat by tasks.register<Detekt>("detektFormat") {
     parallel = true
     autoCorrect = true
     jvmTarget = JavaVersion.VERSION_17.toString()
-    config.setFrom(files(project.rootDir.resolve(detektConfigPath)))
+    config.setFrom(files(rootProject.projectDir.resolve(detektConfigPath)))
 }
 
 // ✅ Создание baseline
 val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektProjectBaseline") {
     description = "Regenerates the Detekt baseline file."
-    setSource(files(project.projectDir))
+    setSource(files(rootProject.projectDir))
     include("**/*.kt", "**/*.kts")
     exclude("**/resources/**", "**/build/**")
 
@@ -44,5 +44,5 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
     ignoreFailures.set(true)
     parallel.set(true)
     jvmTarget = JavaVersion.VERSION_17.toString()
-    config.setFrom(files(project.rootDir.resolve(detektConfigPath)))
+    config.setFrom(files(rootProject.projectDir.resolve(detektConfigPath)))
 }
