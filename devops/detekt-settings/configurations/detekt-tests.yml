@@ -90,7 +90,7 @@ style:
     active: false
   NewLineAtEndOfFile:
     active: false
+
+libraries:
   LibraryEntitiesShouldNotBePublic:
-    active: false
-  FinalNewline:
     active: false
