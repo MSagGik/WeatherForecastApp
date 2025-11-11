@@ -15,15 +15,13 @@ private val apiKey: String = run {
     if (file.exists()) {
         Properties().apply { file.inputStream().use(::load) }
             .getProperty(weatherApiKey)
-            .also { key ->
-                val safeKey = key ?: "null"
-                println("$weatherProperties: ${safeKey.take(5)}***")
-            }
+            ?.also { println("$weatherProperties: ${it.take(5)}***") }
+            ?: "missing_in_file".also { println("$weatherProperties: $weatherApiKey not found") }
     } else {
         System.getenv(weatherApiKey)
             ?.also { println("env: ${it.take(5)}***") }
             ?: "fallback_debug_key".also { println("fallback!") }
-    } ?: "missing_key"
+    }
 }
 
 android {
@@ -77,6 +75,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
