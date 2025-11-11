@@ -55,4 +55,3 @@ fun WeatherForecastAppTheme(
         content = content
     )
 }
-
