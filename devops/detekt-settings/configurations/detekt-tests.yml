@@ -92,3 +92,5 @@ style:
     active: false
   LibraryEntitiesShouldNotBePublic:
     active: false
+  FinalNewline:
+    active: false
