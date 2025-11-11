@@ -5,7 +5,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LocationDto(
+internal data class LocationDto(
     val name: String,
     val country: String,
     @SerializedName("localtime")

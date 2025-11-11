@@ -6,7 +6,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ForecastResponse(
+internal data class ForecastResponse(
     val location: LocationDto,
     val forecast: ForecastDto
 ) : ResponseBackend(), Parcelable

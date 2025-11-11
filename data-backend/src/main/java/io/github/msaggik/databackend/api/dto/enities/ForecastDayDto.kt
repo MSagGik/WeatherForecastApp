@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class ForecastDayDto(
+internal data class ForecastDayDto(
     val date: String,
     val day: DayDto
 ) : Parcelable

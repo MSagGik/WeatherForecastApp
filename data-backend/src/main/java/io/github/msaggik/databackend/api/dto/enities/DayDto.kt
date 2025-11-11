@@ -5,7 +5,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class DayDto(
+internal data class DayDto(
     @SerializedName("avgtemp_c")
     val avgTempC: Float,
     @SerializedName("daily_chance_of_rain")
