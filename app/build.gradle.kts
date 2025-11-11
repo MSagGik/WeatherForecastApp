@@ -1,9 +1,27 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+}
+
+private val weatherApiKey = "WEATHER_API_KEY"
+private val weatherProperties = "weather.properties"
+
+private val apiKey: String = run {
+    val file = rootProject.file(weatherProperties)
+    if (file.exists()) {
+        Properties().apply { file.inputStream().use(::load) }
+            .getProperty(weatherApiKey)
+            ?.also { println("$weatherProperties: ${it.take(5)}***") }
+            ?: "missing_in_file".also { println("$weatherProperties: $weatherApiKey not found") }
+    } else {
+        System.getenv(weatherApiKey)
+            ?.also { println("env: ${it.take(5)}***") }
+            ?: "fallback_debug_key".also { println("fallback!") }
+    }
 }
 
 android {
@@ -31,7 +49,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+//            signingConfig = signingConfigs.getByName("debug")
         }
         debug {
             isMinifyEnabled = false
@@ -41,6 +59,11 @@ android {
             enableAndroidTestCoverage = false
         }
     }
+
+    buildTypes.configureEach {
+        buildConfigField("String", weatherApiKey, "\"$apiKey\"")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -52,6 +75,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
