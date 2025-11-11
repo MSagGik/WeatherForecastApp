@@ -9,4 +9,4 @@ import kotlinx.parcelize.Parcelize
 data class ForecastResponse(
     val location: LocationDto,
     val forecast: ForecastDto
-): ResponseBackend(), Parcelable
+) : ResponseBackend(), Parcelable

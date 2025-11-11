@@ -10,7 +10,7 @@ import android.net.NetworkCapabilities
 internal class RetrofitClient(
     private val weatherApiService: WeatherApiService,
     private val context: Context
-): WeatherApiClient {
+) : WeatherApiClient {
 
     override suspend fun doRequestGetWeather(
         location: String,
@@ -23,20 +23,20 @@ internal class RetrofitClient(
                     days = days
                 )
             }.fold(
-                onSuccess = { it.apply { resultNetworkCode = 200 } },
+                onSuccess = { it.apply { resultNetworkCode = ResponseBackend.SUCCESS_OK } },
                 onFailure = { exception ->
                     ResponseBackend().apply {
                         resultNetworkCode = if (exception is HttpException) {
                             exception.code()
                         }  else {
-                            -2
+                            ResponseBackend.ERROR_UNKNOWN
                         }
                     }
                 }
             )
         } else {
             ResponseBackend().apply {
-                resultNetworkCode = -1
+                resultNetworkCode = ResponseBackend.ERROR_NO_INTERNET
             }
         }
     }

@@ -1,6 +1,5 @@
 package io.github.msaggik.databackend.di
 
-import io.github.msaggik.databackend.BuildConfig
 import io.github.msaggik.databackend.api.WeatherApiClient
 import io.github.msaggik.databackend.api.backend.RetrofitClient
 import io.github.msaggik.databackend.api.backend.WeatherApiService
