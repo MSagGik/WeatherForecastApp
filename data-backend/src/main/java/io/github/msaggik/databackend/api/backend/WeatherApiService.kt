@@ -9,12 +9,10 @@ private const val WEATHER_API_KEY = BuildConfig.WEATHER_API_KEY
 
 internal interface WeatherApiService {
 
-    @GET("/forecast.json")
+    @GET("forecast.json")
     suspend fun getForecast(
         @Query("key") apiKey: String = WEATHER_API_KEY,
         @Query("q") location: String,
-        @Query("days") days: Int = 3,
-        @Query("aqi") aqi: String = "no",
-        @Query("alerts") alerts: String = "no"
+        @Query("days") days: Int = 3
     ): ForecastResponse
 }
