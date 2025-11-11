@@ -81,11 +81,15 @@ style:
   MagicNumber:
     ignoreNumbers: ['-1', '0', '1', '2', '100']
     ignoreEnums: true
-    ignoreRanges: true
+    ignoreProperties: true
+    ignoreAnnotation: true
+    ignoreCompanionObjectPropertyDeclaration: true
   ReturnCount:
     max: 3
     excludeGuardClauses: true
   TrailingWhitespace:
     active: false
   NewLineAtEndOfFile:
+    active: false
+  LibraryEntitiesShouldNotBePublic:
     active: false
