@@ -51,15 +51,17 @@ exceptions:
 
 formatting:
   active: true
-  autoCorrect: false
+  autoCorrect: true
   Indentation:
     indentSize: 4
+    continuationIndentSize: 8
   ImportOrdering:
-    layout: '*,java.**,javax.**,kotlin.**,^'
+    layout: '*,java.**,javax.**,kotlin.**,android.**,kotlinx.**,^'
   NoWildcardImports:
     active: true
   FinalNewline:
-    active: false
+    active: true
+    insertFinalNewline: true
 
 naming:
   active: true
@@ -90,7 +92,7 @@ style:
     max: 3
     excludeGuardClauses: true
   TrailingWhitespace:
-    active: false
+    active: true
 
 libraries:
   LibraryEntitiesShouldNotBePublic:

@@ -23,3 +23,4 @@ rootProject.name = "WeatherForecastApp"
 
 includeBuild("devops")
 include(":app")
+include(":data-backend")

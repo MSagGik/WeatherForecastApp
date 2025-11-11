@@ -1,4 +1,4 @@
-package io.github.msaggik.weatherforecastapp
+package io.github.msaggik.databackend
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
