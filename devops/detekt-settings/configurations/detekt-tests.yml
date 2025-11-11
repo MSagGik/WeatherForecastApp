@@ -81,7 +81,6 @@ style:
   MagicNumber:
     ignoreNumbers: ['-1', '0', '1', '2', '100']
     ignoreEnums: true
-    ignoreProperties: true
     ignoreAnnotation: true
     ignoreCompanionObjectPropertyDeclaration: true
   ReturnCount:
