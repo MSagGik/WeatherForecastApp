@@ -15,7 +15,7 @@ env:
   commonGradleFlags: --parallel --stacktrace --build-cache --no-daemon --warning-mode=summary
   detektConfigPath: devops/detekt-settings/configurations/detekt-tests.yml
   detektReportPath: ./build/reports/detekt/detekt.xml
-  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=added -tee -fail-on-error=true
+  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=file -tee -fail-on-error=true
 
 jobs:
   tests:
@@ -63,19 +63,25 @@ jobs:
       - name: Run detekt
         run: ./gradlew detektAll $commonGradleFlags -Pdetekt.config=$detektConfigPath
 
+      - name: Debug detekt report
+        run: |
+          echo "report path: $detektReportPath"
+          ls -l $detektReportPath || true
+          sed -n '1,50p' $detektReportPath || true
+
       # 7. Submitting a Detekt report to Reviewdog (as a comment in PR)
       - name: Run Reviewdog for Detekt as Github Review
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          reviewdog $reviewdogSetup -Pdetekt.config=$detektConfigPath -reporter=github-pr-review <$detektReportPath
+          reviewdog $reviewdogSetup -reporter=github-pr-review < $detektReportPath
 
       # 8. Submitting a Detekt report as a GitHub Check
       - name: Run Reviewdog for Detekt as Github CHECK
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          reviewdog $reviewdogSetup -Pdetekt.config=$detektConfigPath -reporter=github-pr-check <$detektReportPath
+          reviewdog $reviewdogSetup -reporter=github-pr-check < $detektReportPath
 
   build:
     name: Build
