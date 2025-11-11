@@ -18,6 +18,7 @@
 
 # Local configuration
 local.properties
+weather.properties
 
 # Secret files
 app/keystore.jks
