@@ -28,7 +28,7 @@ internal class RetrofitClient(
                     ResponseBackend().apply {
                         resultNetworkCode = if (exception is HttpException) {
                             exception.code()
-                        }  else {
+                        } else {
                             ResponseBackend.ERROR_UNKNOWN
                         }
                     }
@@ -44,8 +44,8 @@ internal class RetrofitClient(
     private fun isConnected(): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
-        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
     }
 }
