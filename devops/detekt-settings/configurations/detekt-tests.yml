@@ -5,21 +5,6 @@ build:
 config:
   validation: true
   warningsAsErrors: false
-  buildUponDefaultConfig: true
-
-test-patterns: &tests
-  - '**/test/**'
-  - '**/androidTest/**'
-  - '**/commonTest/**'
-  - '**/jvmTest/**'
-  - '**/jsTest/**'
-  - '**/iosTest/**'
-
-excludes:
-  - '**/build/**'
-  - '**/generated/**'
-  - '**/resources/**'
-  - '**/node_modules/**'
 
 processors:
   active: false
@@ -34,7 +19,7 @@ complexity:
   LongMethod:
     active: true
     threshold: 60
-    excludes: *tests
+    excludes: '**/test/**,**/androidTest/**,**/commonTest/**,**/jvmTest/**,**/jsTest/**,**/iosTest/**'
   LongParameterList:
     active: true
     functionThreshold: 8
@@ -47,7 +32,7 @@ complexity:
     thresholdInFiles: 120
     thresholdInClasses: 80
     thresholdInInterfaces: 20
-    excludes: *tests
+    excludes: '**/test/**,**/androidTest/**,**/commonTest/**,**/jvmTest/**,**/jsTest/**,**/iosTest/**'
 
 coroutines:
   active: true
@@ -62,7 +47,7 @@ exceptions:
   active: true
   TooGenericExceptionCaught:
     active: true
-    excludes: *tests
+    excludes: '**/test/**,**/androidTest/**'
 
 formatting:
   active: true
