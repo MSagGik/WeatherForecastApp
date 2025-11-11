@@ -13,8 +13,9 @@ permissions:
 
 env:
   commonGradleFlags: --parallel --stacktrace --build-cache --no-daemon --warning-mode=summary
+  detektConfigPath: devops/detekt-settings/configurations/detekt-tests.yml
   detektReportPath: ./build/reports/detekt/detekt.xml
-  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=added -tee -fail-level=any
+  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=added -tee -fail-on-error=true
 
 jobs:
   tests:
@@ -60,7 +61,7 @@ jobs:
 
       # 6. Run detekt
       - name: Run detekt
-        run: ./gradlew detektAll $commonGradleFlags
+        run: ./gradlew detektAll $commonGradleFlags -Pdetekt.config=$detektConfigPath
 
       # 7. Submitting a Detekt report to Reviewdog (as a comment in PR)
       - name: Run Reviewdog for Detekt as Github Review
