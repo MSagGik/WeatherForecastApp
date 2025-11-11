@@ -14,7 +14,7 @@ permissions:
 env:
   commonGradleFlags: --parallel --stacktrace --build-cache --no-daemon --warning-mode=summary
   detektReportPath: ./build/reports/detekt/detekt.xml
-  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=added -tee -fail-on-error=true
+  reviewdogSetup: -f=checkstyle -name="detekt" -level=error -filter-mode=added -tee -fail-level=any
 
 jobs:
   tests:

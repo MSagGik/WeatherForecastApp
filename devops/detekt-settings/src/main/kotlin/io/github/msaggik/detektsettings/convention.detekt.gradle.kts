@@ -5,7 +5,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt")
 }
 
-private val detektConfigPath = "${rootDir}/devops/detekt-settings/configurations/detekt-tests.yml"
+private val detektConfigPath = "$rootDir/devops/detekt-settings/configurations/detekt-tests.yml"
 
 // ✅ Главная задача для всех модулей
 val detektAll by tasks.register<Detekt>("detektAll") {
