@@ -15,7 +15,10 @@ private val apiKey: String = run {
     if (file.exists()) {
         Properties().apply { file.inputStream().use(::load) }
             .getProperty(weatherApiKey)
-            .also { println("$weatherProperties: ${it.take(5)}***") }
+            .also { key ->
+                val safeKey = key ?: "null"
+                println("$weatherProperties: ${safeKey.take(5)}***")
+            }
     } else {
         System.getenv(weatherApiKey)
             ?.also { println("env: ${it.take(5)}***") }
