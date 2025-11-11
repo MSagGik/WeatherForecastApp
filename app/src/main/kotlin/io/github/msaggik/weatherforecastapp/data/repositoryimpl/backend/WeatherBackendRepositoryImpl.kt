@@ -23,9 +23,15 @@ class WeatherBackendRepositoryImpl(
             location = location,
             days = days
         )
-        when(response.resultNetworkCode) {
+        when (response.resultNetworkCode) {
             ResponseBackend.DEFAULT -> { emit(NetworkState.Loading) }
-            ResponseBackend.SUCCESS_OK -> { emit(NetworkState.Success(weatherMapper.map(response as ForecastResponse))) }
+            ResponseBackend.SUCCESS_OK -> {
+                emit(
+                    NetworkState.Success(
+                        weatherMapper.map(response as ForecastResponse)
+                    )
+                )
+            }
             ResponseBackend.ERROR_NO_INTERNET -> { emit(NetworkState.InternetOff) }
             ResponseBackend.ERROR_UNKNOWN -> { emit(NetworkState.InternetError) }
         }

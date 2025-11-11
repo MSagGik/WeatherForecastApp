@@ -54,7 +54,6 @@ formatting:
   autoCorrect: true
   Indentation:
     indentSize: 4
-    continuationIndentSize: 8
   ImportOrdering:
     layout: '*,java.**,javax.**,kotlin.**,android.**,kotlinx.**,^'
   NoWildcardImports:
@@ -96,4 +95,6 @@ style:
 
 libraries:
   LibraryEntitiesShouldNotBePublic:
+    active: false
+  ForbiddenPublicDataClass:
     active: false

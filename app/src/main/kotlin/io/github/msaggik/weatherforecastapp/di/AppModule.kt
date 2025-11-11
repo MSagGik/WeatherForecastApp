@@ -30,4 +30,3 @@ val appModule = module {
         WeatherMapper()
     }
 }
-
