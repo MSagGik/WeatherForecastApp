@@ -57,8 +57,18 @@ val detektProjectBaseline by tasks.register<DetektCreateBaselineTask>("detektPro
 
 val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
-dependencies {
-    add("detekt", libs.findLibrary("detekt.analysis.cli").get())
-    add("detektPlugins", libs.findLibrary("detekt.analysis.formatting").get())
-    add("detektPlugins", libs.findLibrary("detekt.analysis.libraries").get())
+fun addIfPresent(
+    configurationName: String,
+    alias: String
+) {
+    val maybeLib = libs.findLibrary(alias)
+    if (maybeLib.isPresent) {
+        dependencies.add(configurationName, maybeLib.get())
+    } else {
+        logger.warn("Version catalog entry '$alias' not found. Skipping adding to '$configurationName'.")
+    }
 }
+
+addIfPresent("detekt", "detekt.analysis.cli")
+addIfPresent("detektPlugins", "detekt.analysis.formatting")
+addIfPresent("detektPlugins", "detekt.analysis.libraries")
