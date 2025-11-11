@@ -5,7 +5,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal data class ForecastDto(
+data class ForecastDto(
     @SerializedName("forecastday")
     val forecastDay: List<ForecastDayDto>
 ) : Parcelable

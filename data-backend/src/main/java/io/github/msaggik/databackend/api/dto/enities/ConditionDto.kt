@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal data class ConditionDto(
+data class ConditionDto(
     val text: String,
     val icon: String
 ) : Parcelable
