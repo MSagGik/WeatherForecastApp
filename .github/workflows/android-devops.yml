@@ -71,6 +71,7 @@ jobs:
 
       # 7. Submitting a Detekt report to Reviewdog (as a comment in PR)
       - name: Run Reviewdog for Detekt as Github Review
+        if: github.event_name == 'pull_request'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -78,6 +79,7 @@ jobs:
 
       # 8. Submitting a Detekt report as a GitHub Check
       - name: Run Reviewdog for Detekt as Github CHECK
+        if: github.event_name == 'pull_request'
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
