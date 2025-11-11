@@ -1,0 +1,51 @@
+package io.github.msaggik.databackend.api.backend
+
+import io.github.msaggik.databackend.api.WeatherApiClient
+import io.github.msaggik.databackend.api.dto.ResponseBackend
+import retrofit2.HttpException
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+
+internal class RetrofitClient(
+    private val weatherApiService: WeatherApiService,
+    private val context: Context
+): WeatherApiClient {
+
+    override suspend fun doRequestGetWeather(
+        location: String,
+        days: Int
+    ): ResponseBackend {
+        return if (isConnected()) {
+            runCatching {
+                weatherApiService.getForecast(
+                    location = location,
+                    days = days
+                )
+            }.fold(
+                onSuccess = { it.apply { resultNetworkCode = 200 } },
+                onFailure = { exception ->
+                    ResponseBackend().apply {
+                        resultNetworkCode = if (exception is HttpException) {
+                            exception.code()
+                        }  else {
+                            -2
+                        }
+                    }
+                }
+            )
+        } else {
+            ResponseBackend().apply {
+                resultNetworkCode = -1
+            }
+        }
+    }
+
+    private fun isConnected(): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+    }
+}
