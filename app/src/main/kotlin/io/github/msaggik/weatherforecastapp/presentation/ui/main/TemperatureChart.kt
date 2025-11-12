@@ -48,7 +48,7 @@ fun TemperatureChart(
         entityColors = listOf(MaterialTheme.colorScheme.primary),
         axisLabelColor = MaterialTheme.colorScheme.onBackground,
         axisLineColor = MaterialTheme.colorScheme.outlineVariant,
-        axisGuidelineColor = Color.LightGray,
+        axisGuidelineColor = Color.Transparent,
         elevationOverlayColor = MaterialTheme.colorScheme.secondary
     )
 
