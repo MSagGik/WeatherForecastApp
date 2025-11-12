@@ -1,55 +1,44 @@
 package io.github.msaggik.weatherforecastapp.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.msaggik.weatherforecastapp.domain.usecase.WeatherBackendInteractor
 import io.github.msaggik.weatherforecastapp.presentation.viewmodel.state.ForecastState
 import io.github.msaggik.weatherforecastapp.utils.NetworkState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+
+private const val DEFAULT_NUMBER_DAY_WEATHER = 3
 
 internal class WeatherViewModel(
     private val weatherBackendInteractor: WeatherBackendInteractor
 ) : ViewModel() {
 
-    private var _forecastStateLiveData = MutableLiveData<ForecastState>()
-    val forecastStateLiveData: LiveData<ForecastState> = _forecastStateLiveData
+    private val _forecastState = MutableStateFlow<ForecastState>(ForecastState.Loading)
+    val forecastState: StateFlow<ForecastState> = _forecastState.asStateFlow()
 
     init {
-        _forecastStateLiveData.value = ForecastState.Loading
+        // example settings
+        loadWeather("Moscow", DEFAULT_NUMBER_DAY_WEATHER)
     }
 
-    fun getWeather(
-        location: String,
-        days: Int
-    ) {
+    fun loadWeather(location: String, days: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            _forecastStateLiveData.postValue(ForecastState.Loading)
-
-            weatherBackendInteractor.getWeather(
-                location = location,
-                days = days
-            ).collect { response ->
-                when (response) {
-                    is NetworkState.Loading -> {
-                        _forecastStateLiveData.postValue(ForecastState.Loading)
-                    }
-
-                    is NetworkState.Success -> {
-                        _forecastStateLiveData.postValue(ForecastState.Content(response.data))
-                    }
-
-                    is NetworkState.InternetOff -> {
-                        _forecastStateLiveData.postValue(ForecastState.InternetOff)
-                    }
-
-                    is NetworkState.InternetError -> {
-                        _forecastStateLiveData.postValue(ForecastState.InternetError)
-                    }
+            _forecastState.emit(ForecastState.Loading)
+            weatherBackendInteractor.getWeather(location, days)
+                .collect { response ->
+                    _forecastState.emit(
+                        when (response) {
+                            is NetworkState.Loading -> ForecastState.Loading
+                            is NetworkState.Success -> ForecastState.Content(response.data)
+                            is NetworkState.InternetOff -> ForecastState.InternetOff
+                            is NetworkState.InternetError -> ForecastState.InternetError
+                        }
+                    )
                 }
-            }
         }
     }
 }
