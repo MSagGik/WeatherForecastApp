@@ -1,8 +1,10 @@
 package io.github.msaggik.databackend.api.backend
 
+import androidx.annotation.RequiresPermission
 import io.github.msaggik.databackend.api.WeatherApiClient
 import io.github.msaggik.databackend.api.dto.ResponseBackend
 import retrofit2.HttpException
+import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -12,6 +14,7 @@ internal class RetrofitClient(
     private val context: Context
 ) : WeatherApiClient {
 
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     override suspend fun doRequestGetWeather(
         location: String,
         days: Int
@@ -41,6 +44,7 @@ internal class RetrofitClient(
         }
     }
 
+    @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
     private fun isConnected(): Boolean {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false

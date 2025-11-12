@@ -1,4 +1,4 @@
-package io.github.msaggik.weatherforecastapp.ui.theme
+package io.github.msaggik.weatherforecastapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
